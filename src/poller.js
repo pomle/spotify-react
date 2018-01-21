@@ -2,9 +2,7 @@ export function createPoller(player, onState) {
   let pollTimer;
   let lastTimestamp = 0;
 
-  async function poll() {
-    const state = await player.getCurrentState();
-
+  function emit(state) {
     if (state) {
       if (state.timestamp > lastTimestamp) {
         onState(state);
@@ -13,6 +11,10 @@ export function createPoller(player, onState) {
     }
 
     pollTimer = setTimeout(poll, 1000);
+  }
+
+  function poll() {
+    player.getCurrentState().then(emit);
   }
 
   function destroy() {

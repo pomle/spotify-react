@@ -15,12 +15,24 @@ export class Player extends PureComponent {
     handleMessage: PropTypes.func.isRequired,
   };
 
-  async componentWillMount() {
+  componentWillMount() {
     const {session: {token}, name, handleMessage} = this.props;
 
-    this.player = await createPlayer(token, {
-      name,
-    });
+    createPlayer(token, {name})
+    .then(player => this.setupPlayer(player));
+  }
+
+  componentWillUnmount() {
+    if (this.poller) {
+      this.poller.destroy();
+    }
+    if (this.player) {
+      this.player.disconnect();
+    }
+  }
+
+  setupPlayer(player) {
+    this.plyaer = player;
 
     this.player.on('ready', message => {
       handleMessage('ready', message);
@@ -42,15 +54,6 @@ export class Player extends PureComponent {
     });
 
     this.player.connect();
-  }
-
-  componentWillUnmount() {
-    if (this.poller) {
-      this.poller.destroy();
-    }
-    if (this.player) {
-      this.player.disconnect();
-    }
   }
 
   onContext(context) {
