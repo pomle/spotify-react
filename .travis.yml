@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - "8"
+
+env:
+    secure: "Sdhk8V3jJFVvmxTG3k73AyfNmRw3bVJlLxLAyOQxX0a9uLthAF/0gvN/zPWGhCN/xFykyc4qUlxL2pBV3nI9Hs641/MqydfKTV38J9S8KVlYZk/GzNKGFFtACGee1KSkMXo/jYzFPQz6gzayDVaa4icZxeT1CxABNWb+mMZWaHpVI+xQa8ui6BdpfGPExmi6b/0CoeeYo2s6mPtXVuiU2UE6JyC+ehK5h4Rb0jXbsTEB8LldSuP3cFQluOuIHug+quB+MbVBRmy7kZqelf/Nszmf/7PG2BXAlZl2LakuhtvFStFfHEWcWIN/Z2ah8oLgOZ7SAlZpIbvfYIBhY1JSaGOsdtR6AqSFUeF3n1UXYtrrJ3DTnDGu9SQoW7yMVKDk2YUrMm3VKE1tX3kC2dX8oBZofxZdbFdV5ycdYrXsBi3IEiMZF33db0rAL3Q1EHuEP7G7bC88VssfC0+3gYiR0suN1zKIduBk1ZeUQNtLb1EgJACmQBlJDW6ORxgCx+lKgoMmOdegbJgSsBUiO6MyfJyiQNzPhGSbKccDf7helS7zU5c9y5WTmyKJv7GWgjvSPqLvrgiJQe2Cc9vRY8+EvcJtN/6CulytJ3fv50cazQIEouhIIe06M6WiUc/s4+0uTA0eZGtkus0pl8xSAPkGuvy5wverR/O+lCqOWSLFkDo="
+
+script:
+- yarn test
+- yarn run build
+
+deploy:
+  provider: npm
+  email: "pontus.alexander@gmail.com"
+  api_key: $NPM_API_KEY
+  skip_cleanup: true
+  tag: next
+  on:
+    tags: true
