@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#connect works as standard connect but takes an array 1`] = `
+<div>
+  1
+   
+  2
+   
+  100
+  , 
+  101
+</div>
+`;
+
+exports[`#withPlayingTrack maps Spotify state to props 1`] = `
+<div>
+  The analyses
+  The features
+  1Nk3rKuQwAgVNqT93pFvAd
+</div>
+`;
