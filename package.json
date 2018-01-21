@@ -24,16 +24,6 @@
     "react-redux": "^5.0.6",
     "redux": "^3.7.2"
   },
-  "peerDependencies": {
-    "@pomle/spotify-redux": "^0.0.0-6",
-    "@pomle/spotify-web-sdk": "*",
-    "prop-types": "*",
-    "immutable": "^3.8.2",
-    "react": "^16.2.0",
-    "redux": "^3.7.2",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.6"
-  },
   "jest": {
     "verbose": true
   }
