@@ -8,15 +8,9 @@
     "test": "jest"
   },
   "main": "/dist/index.js",
-  "dependencies": {
-    "@pomle/spotify-web-sdk": "latest",
-    "@pomle/spotify-redux": "latest",
-    "react": "^16.2.0",
-    "react-connect": "^0.4.0",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.6"
-  },
   "devDependencies": {
+    "react": "^16.2.0",
+    "immutable": "^3.8.2",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-jest": "^21.2.0",
@@ -25,6 +19,15 @@
     "babel-preset-react": "^6.24.1",
     "jest": "^21.2.1",
     "prettier": "^1.5.3"
+  },
+  "peerDependencies": {
+    "@pomle/spotify-web-sdk": "*",
+    "@pomle/spotify-redux": "^0.0.0-6",
+    "immutable": "^3.8.2",
+    "react": "^16.2.0",
+    "react-connect": "^0.4.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6"
   },
   "jest": {
     "verbose": true
