@@ -16,7 +16,7 @@ export class Player extends PureComponent {
   };
 
   componentWillMount() {
-    const {session: {token}, name, handleMessage} = this.props;
+    const {session: {token}, name} = this.props;
 
     createPlayer(token, {name})
     .then(player => this.setupPlayer(player));
@@ -32,7 +32,9 @@ export class Player extends PureComponent {
   }
 
   setupPlayer(player) {
-    this.plyaer = player;
+    const {handleMessage} = this.props;
+
+    this.player = player;
 
     this.player.on('ready', message => {
       handleMessage('ready', message);
