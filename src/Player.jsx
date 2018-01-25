@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
-import { fromJS } from 'immutable';
 import PropTypes from 'prop-types';
+import { fromJS } from 'immutable';
 import { connect } from 'react-redux';
 import { createPlayer } from '@pomle/spotify-web-sdk';
 import { setAnalysis, setFeature, setAlbumPalette, handleMessage } from '@pomle/spotify-redux';
@@ -83,7 +83,7 @@ export class Player extends PureComponent {
   });
 
   render() {
-    return this.props.children;
+    return null;
   }
 }
 
