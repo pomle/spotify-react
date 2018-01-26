@@ -69,19 +69,20 @@ export class Player extends PureComponent {
     };
   }
 
-  async componentWillMount() {
-    const Spotify = await getSpotify();
+  componentWillMount() {
+    getSpotify()
+    .then(Spotify => {
+      const player = new Spotify.Player({
+        name: this.props.name,
+        getOAuthToken: callback => {
+          const {token} = this.props.session;
+          console.log('Giving new token to Spotify Player', token);
+          callback(token);
+        }
+      });
 
-    const player = new Spotify.Player({
-      name: this.props.name,
-      getOAuthToken: callback => {
-        const {token} = this.props.session;
-        console.log('Giving new token to Spotify Player', token);
-        callback(token);
-      }
+      this.setState({player});
     });
-
-    this.setState({player});
   }
 
   onTrackChange = onChange(trackId => {
