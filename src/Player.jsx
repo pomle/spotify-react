@@ -1,12 +1,58 @@
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import { connect } from 'react-redux';
-import { createPlayer } from '@pomle/spotify-web-sdk';
+import { getSpotify } from '@pomle/spotify-web-sdk';
 import { setAnalysis, setFeature, setAlbumPalette, handleMessage } from '@pomle/spotify-redux';
 
 import { createPoller } from './poller';
 import { onChange } from './util';
+
+class SpotifyPlayer extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.setupPlayer(props.player);
+  }
+
+  componentWillMount() {
+    this.props.player.connect();
+
+    this.poller = createPoller(this.props.player, context => {
+      handleMessage('state', context);
+    });
+  }
+
+  componentWillUnmount() {
+    this.props.player.disconnect();
+    this.poller.destroy();
+  }
+
+  setupPlayer(player) {
+    const {handleMessage} = this.props;
+
+    player.on('ready', message => {
+      this.onMessage('ready', message);
+    });
+
+    player.on('player_state_changed', message => {
+      if (!message) {
+        console.warn('player_state_changed message was empty', message);
+        return;
+      }
+
+      this.onMessage('state', message);
+    });
+  }
+
+  onMessage(type, message) {
+    this.props.onMessage(type, message);
+  }
+
+  render() {
+    return null;
+  }
+}
 
 export class Player extends PureComponent {
   static propTypes = {
@@ -15,52 +61,27 @@ export class Player extends PureComponent {
     handleMessage: PropTypes.func.isRequired,
   };
 
-  componentWillMount() {
-    const {session: {token}, name} = this.props;
+  constructor(props) {
+    super(props);
 
-    createPlayer(token, {name})
-    .then(player => this.setupPlayer(player));
+    this.state = {
+      player: null,
+    };
   }
 
-  componentWillUnmount() {
-    if (this.poller) {
-      this.poller.destroy();
-    }
-    if (this.player) {
-      this.player.disconnect();
-    }
-  }
+  async componentWillMount() {
+    const Spotify = await getSpotify();
 
-  setupPlayer(player) {
-    const {handleMessage} = this.props;
-
-    this.player = player;
-
-    this.player.on('ready', message => {
-      handleMessage('ready', message);
-    });
-
-    this.player.on('player_state_changed', message => {
-      if (!message) {
-        console.warn('player_state_changed message was empty', message);
-        return;
+    const player = new Spotify.Player({
+      name: this.props.name,
+      getOAuthToken: callback => {
+        const {token} = this.props.session;
+        console.log('Giving new token to Spotify Player', token);
+        callback(token);
       }
-
-      this.onContext(fromJS(message));
-
-      handleMessage('state', message);
     });
 
-    this.poller = createPoller(this.player, context => {
-      handleMessage('state', context);
-    });
-
-    this.player.connect();
-  }
-
-  onContext(context) {
-    this.onTrackChange(context.getIn(['track_window', 'current_track', 'id']));
-    this.onAlbumChange(context.getIn(['track_window', 'current_track', 'album', 'uri']));
+    this.setState({player});
   }
 
   onTrackChange = onChange(trackId => {
@@ -83,7 +104,13 @@ export class Player extends PureComponent {
   });
 
   render() {
-    return null;
+    const {player} = this.state;
+    return player
+      ? <SpotifyPlayer
+        player={player}
+        onMessage={this.props.handleMessage}
+      />
+      : null;
   }
 }
 
